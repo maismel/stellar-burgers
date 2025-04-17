@@ -10,8 +10,7 @@ import { TOrder } from '@utils-types';
 export const getAllFeeds = createAsyncThunk<TOrder[]>(
   'feeds/getAll',
   async () => {
-    const response = await getFeedsApi(); // Получаем объект TFeedsResponse
-    console.log('API Response:', response);
+    const response = await getFeedsApi();
     return response.orders;
   }
 );

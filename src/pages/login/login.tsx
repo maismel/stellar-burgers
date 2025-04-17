@@ -1,5 +1,5 @@
 import { FC, SyntheticEvent, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector, RootState } from '../../services/store';
 import { loginUser } from '../../services/slices/user/actions';
@@ -10,6 +10,7 @@ import { getUser } from '../../services/slices/user/userSlice';
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const location = useLocation();
 
   const dispatch = useDispatch();
 
@@ -24,7 +25,8 @@ export const Login: FC = () => {
   };
 
   if (user) {
-    return <Navigate to={'/'} />;
+    const { from } = location.state || { from: { pathname: '/' } };
+    return <Navigate to={from.pathname || '/'} />;
   }
 
   return (

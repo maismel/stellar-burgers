@@ -5,6 +5,7 @@ import { getAllIngredientsApi } from './actions';
 type TIngredientsState = {
   ingredients: TIngredient[];
   ingredientsInOrder: TConstructorIngredient[];
+  bun: TConstructorIngredient | null;
   selectedIngredient: TIngredient | null;
   loading: boolean;
   error: string | null;
@@ -13,6 +14,7 @@ type TIngredientsState = {
 const initialState: TIngredientsState = {
   ingredients: [],
   ingredientsInOrder: [],
+  bun: null,
   selectedIngredient: null,
   loading: false,
   error: null
@@ -24,7 +26,11 @@ export const ingredientsSlice = createSlice({
   reducers: {
     addIngredient: {
       reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
-        state.ingredientsInOrder.push(action.payload);
+        if (action.payload.type === 'bun') {
+          state.bun = action.payload;
+        } else {
+          state.ingredientsInOrder.push(action.payload);
+        }
       },
       prepare: (ingredient: TIngredient) => {
         const id: string = nanoid();
@@ -44,13 +50,11 @@ export const ingredientsSlice = createSlice({
     },
     clearIngredients: (state) => {
       state.ingredientsInOrder = [];
+      state.bun = null;
     },
     moveIngredient: (
       state,
-      action: PayloadAction<{
-        fromIndex: number;
-        toIndex: number;
-      }>
+      action: PayloadAction<{ fromIndex: number; toIndex: number }>
     ) => {
       const { fromIndex, toIndex } = action.payload;
       const items = state.ingredientsInOrder;
@@ -64,6 +68,7 @@ export const ingredientsSlice = createSlice({
   selectors: {
     getIngredients: (state) => state.ingredients,
     getIngredientsInOrder: (state) => state.ingredientsInOrder,
+    getBun: (state) => state.bun,
     getSelectedIngredient: (state) => state.selectedIngredient,
     getLoadingStatus: (state) => state.loading
   },
@@ -76,7 +81,6 @@ export const ingredientsSlice = createSlice({
       .addCase(
         getAllIngredientsApi.fulfilled,
         (state, action: PayloadAction<TIngredient[]>) => {
-          console.log('Data loaded:', action.payload);
           state.ingredients = action.payload;
           state.loading = false;
         }
@@ -89,6 +93,7 @@ export const ingredientsSlice = createSlice({
 });
 
 export default ingredientsSlice.reducer;
+
 export const {
   addIngredient,
   removeIngredient,
@@ -101,6 +106,7 @@ export const {
 export const {
   getIngredients,
   getIngredientsInOrder,
+  getBun,
   getSelectedIngredient,
   getLoadingStatus
 } = ingredientsSlice.selectors;

@@ -5,39 +5,28 @@ import {
   registerUserApi,
   logoutApi,
   updateUserApi,
-  TRegisterData
+  TRegisterData,
+  getUserApi
 } from '@api';
 import { getCookie, setCookie } from '../../../utils/cookie';
 import { TUser } from '@utils-types';
-import { authChecked } from './userSlice';
 
-export const registerUser = createAsyncThunk<
-  { user: TUser },
-  TRegisterData,
-  { rejectValue: string }
->('user/registerUser', async (userData, { rejectWithValue }) => {
-  try {
+export const registerUser = createAsyncThunk<{ user: TUser }, TRegisterData>(
+  'user/registerUser',
+  async (userData) => {
     const response = await registerUserApi(userData);
     return response;
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.message || 'Ошибка регистрации';
-    return rejectWithValue(errorMessage);
   }
-});
+);
 
 export const loginUser = createAsyncThunk<
   TUser,
-  { email: string; password: string },
-  { rejectValue: string }
->('user/loginUser', async ({ email, password }, { rejectWithValue }) => {
-  try {
-    const data = await loginUserApi({ email, password });
-    setCookie('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
-    return data.user;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || 'Ошибка входа');
-  }
+  { email: string; password: string }
+>('user/loginUser', async ({ email, password }) => {
+  const data = await loginUserApi({ email, password });
+  setCookie('accessToken', data.accessToken);
+  localStorage.setItem('refreshToken', data.refreshToken);
+  return data.user;
 });
 
 async function fetchUser(): Promise<{ user: TUser }> {
@@ -49,46 +38,27 @@ async function fetchUser(): Promise<{ user: TUser }> {
   return dataUser as { user: TUser };
 }
 
-export const checkUserAuth = createAsyncThunk<
-  TUser | null,
-  void,
-  { rejectValue: string }
->('user/checkUser', async (_, { dispatch, rejectWithValue }) => {
-  try {
-    if (getCookie('accessToken')) {
-      const { user } = await fetchUser();
-      return user;
-    }
-    return null;
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data?.message || 'Ошибка проверки пользователя'
-    );
-  } finally {
-    dispatch(authChecked());
-  }
+export const checkUserAuth = createAsyncThunk('user/checkUser', async () => {
+  const { user } = await fetchUser();
+  return user;
 });
 
-export const logoutUser = createAsyncThunk(
-  'user/logout',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await logoutApi();
-      return response;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
-);
+export const logoutUser = createAsyncThunk('user/logout', async () => {
+  logoutApi;
+});
 
 export const updateUser = createAsyncThunk(
   'user/update',
-  async (user: Partial<TRegisterData>, { rejectWithValue }) => {
-    try {
-      const response = await updateUserApi(user);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
+  async (user: Partial<TRegisterData>) => {
+    const response = await updateUserApi(user);
+    return response;
+  }
+);
+
+export const getUserFromServer = createAsyncThunk(
+  'user/getFromServer',
+  async () => {
+    const res = await getUserApi();
+    return res.user;
   }
 );

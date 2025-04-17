@@ -5,7 +5,8 @@ import {
   loginUser,
   logoutUser,
   registerUser,
-  updateUser
+  updateUser,
+  getUserFromServer
 } from './actions';
 
 export type TUserState = {
@@ -60,7 +61,7 @@ export const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.registerUserRequest = false;
-        state.registerUserError = action.payload ?? 'Неизвестная ошибка';
+        state.registerUserError = action.payload as string;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
@@ -80,6 +81,17 @@ export const userSlice = createSlice({
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
+      })
+      .addCase(getUserFromServer.pending, (state) => {
+        state.isAuthChecked = false;
+      })
+      .addCase(getUserFromServer.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthChecked = true;
+      })
+      .addCase(getUserFromServer.rejected, (state) => {
+        state.user = null;
+        state.isAuthChecked = true;
       });
   }
 });

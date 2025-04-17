@@ -5,6 +5,7 @@ import { getOrdersAll } from '../../services/slices/orders/ordersSlice';
 import { getAllOrders } from '../../services/slices/orders/actions';
 
 export const ProfileOrders: FC = () => {
+  console.log('грузится');
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllOrders());

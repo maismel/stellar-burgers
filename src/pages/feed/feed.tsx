@@ -8,9 +8,7 @@ import { getAllFeeds } from '../../services/slices/orders/actions';
 
 export const Feed: FC = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getAllFeeds());
-  }, []);
+  dispatch(getAllFeeds());
 
   const orders = useSelector(getFeedsAll);
   console.log('Orders from store:', orders);

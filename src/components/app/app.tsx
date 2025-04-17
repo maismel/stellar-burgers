@@ -19,8 +19,11 @@ import { useDispatch } from '../../services/store';
 
 import { AppHeader } from '@components';
 import { useEffect } from 'react';
-import { checkUserAuth } from '../../services/slices/user/actions';
-import { getAllFeeds } from '../../services/slices/orders/actions';
+import {
+  checkUserAuth,
+  getUserFromServer
+} from '../../services/slices/user/actions';
+import { getAllIngredientsApi } from '../../services/slices/ingredients/actions';
 
 const App = () => {
   const location = useLocation();
@@ -28,9 +31,10 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(getAllIngredientsApi());
+    dispatch(getUserFromServer());
     dispatch(checkUserAuth());
-    dispatch(getAllFeeds());
-  }, [dispatch]);
+  }, []);
 
   // Если был клик по ингредиенту, location.state содержит background
   const background = location.state?.background;
@@ -62,10 +66,20 @@ const App = () => {
           }
         />
         <Route
-          path='/profile/orders'
+          path='/profile/orders/'
           element={
             <ProtectedRoute onlyUnAuth={false}>
               <ProfileOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
+        <Route path='/feed/:number' element={<OrderInfo />} />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <ProtectedRoute onlyUnAuth={false}>
+              <OrderInfo />
             </ProtectedRoute>
           }
         />
@@ -92,12 +106,14 @@ const App = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal
-                title='Детали заказа'
-                onClose={() => navigate('/profile/orders')}
-              >
-                <OrderInfo />
-              </Modal>
+              <ProtectedRoute onlyUnAuth={false}>
+                <Modal
+                  title='Детали заказа'
+                  onClose={() => navigate('/profile/orders')}
+                >
+                  <OrderInfo />
+                </Modal>
+              </ProtectedRoute>
             }
           />
         </Routes>
