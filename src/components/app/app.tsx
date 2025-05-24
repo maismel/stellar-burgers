@@ -24,6 +24,10 @@ import {
   getUserFromServer
 } from '../../services/slices/user/actions';
 import { getAllIngredientsApi } from '../../services/slices/ingredients/actions';
+import {
+  getAllFeeds,
+  getAllOrders
+} from '../../services/slices/orders/actions';
 
 const App = () => {
   const location = useLocation();
@@ -34,6 +38,8 @@ const App = () => {
     dispatch(getAllIngredientsApi());
     dispatch(getUserFromServer());
     dispatch(checkUserAuth());
+    dispatch(getAllOrders());
+    dispatch(getAllFeeds());
   }, []);
 
   // Если был клик по ингредиенту, location.state содержит background

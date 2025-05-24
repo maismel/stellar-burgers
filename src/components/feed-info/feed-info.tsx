@@ -5,6 +5,7 @@ import { FeedInfoUI } from '../ui/feed-info';
 
 import { useSelector } from '../../services/store';
 import { getFeedsAll } from '../../services/slices/orders/ordersSlice';
+import { useParams } from 'react-router-dom';
 
 const getOrders = (orders: TOrder[], status: string): number[] =>
   orders
@@ -14,7 +15,11 @@ const getOrders = (orders: TOrder[], status: string): number[] =>
 
 export const FeedInfo: FC = () => {
   const orders: TOrder[] = useSelector(getFeedsAll);
-  const feed = {};
+  // const feed = {};
+
+  const { number } = useParams();
+
+  const feed = orders.filter((order) => order.number === Number(number));
 
   const readyOrders = getOrders(orders, 'done');
 

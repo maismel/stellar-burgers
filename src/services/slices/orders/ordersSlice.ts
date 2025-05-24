@@ -1,14 +1,24 @@
 import { createSlice, PayloadAction, nanoid } from '@reduxjs/toolkit';
-import { TOrder } from '@utils-types';
-import { getAllFeeds, getAllOrders, makeOrder } from './actions';
+import { TIngredient, TOrder } from '@utils-types';
+import {
+  getAllFeeds,
+  getAllOrders,
+  makeOrder,
+  getOrderByNumber
+} from './actions';
 
 type TOrdersState = {
   feeds: TOrder[];
   orders: TOrder[];
   currentOrder: TOrder;
+  orderWithIngredients: TOrderWithIngredients;
   loading: boolean;
   loadingCurrentOrder: boolean;
   error: string | null;
+};
+
+type TOrderWithIngredients = TOrder & {
+  ingredientsInfo?: (TIngredient & { count: number })[];
 };
 
 const initialState: TOrdersState = {
@@ -22,6 +32,16 @@ const initialState: TOrdersState = {
     updatedAt: '',
     number: 0,
     ingredients: []
+  },
+  orderWithIngredients: {
+    _id: '',
+    status: '',
+    name: '',
+    createdAt: '',
+    updatedAt: '',
+    number: 0,
+    ingredients: [],
+    ingredientsInfo: [] // Добавляем поле для информации об ингредиентах
   },
   loading: false,
   loadingCurrentOrder: false,
@@ -53,6 +73,9 @@ export const ordersSlice = createSlice({
         number: 0,
         ingredients: []
       };
+    },
+    selectOrder(state, action) {
+      state.currentOrder = action.payload;
     }
   },
   selectors: {
@@ -72,7 +95,6 @@ export const ordersSlice = createSlice({
       .addCase(
         getAllFeeds.fulfilled,
         (state, action: PayloadAction<TOrder[]>) => {
-          console.log('Orders in reducer:', action.payload);
           state.loading = false;
           state.feeds = action.payload;
         }
@@ -108,6 +130,9 @@ export const ordersSlice = createSlice({
       })
       .addCase(getAllOrders.fulfilled, (state, action) => {
         state.orders = action.payload;
+      })
+      .addCase(getOrderByNumber.fulfilled, (state, action) => {
+        state.currentOrder = action.payload;
       });
   }
 });
@@ -120,4 +145,5 @@ export const {
   getOrdersAll,
   getCurrentOrderLoading
 } = ordersSlice.selectors;
-export const { createOrder, clearCurrentOrder } = ordersSlice.actions;
+export const { createOrder, clearCurrentOrder, selectOrder } =
+  ordersSlice.actions;
