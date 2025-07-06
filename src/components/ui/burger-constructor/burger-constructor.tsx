@@ -16,7 +16,8 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   price,
   orderModalData,
   onOrderClick,
-  closeOrderModal
+  closeOrderModal,
+  isLoading
 }) => (
   <section className={styles.burger_constructor}>
     {constructorItems.bun ? (
@@ -40,12 +41,15 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
       {constructorItems.ingredients.length > 0 ? (
         constructorItems.ingredients.map(
           (item: TConstructorIngredient, index: number) => (
-            <BurgerConstructorElement
-              ingredient={item}
-              index={index}
-              totalItems={constructorItems.ingredients.length}
-              key={item.id}
-            />
+            <div className={styles.element} key={item.id}>
+              {' '}
+              {/* Заменить <li> на <div> */}
+              <BurgerConstructorElement
+                ingredient={item}
+                index={index}
+                totalItems={constructorItems.ingredients.length}
+              />
+            </div>
           )
         )
       ) : (
@@ -56,6 +60,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         </div>
       )}
     </ul>
+
     {constructorItems.bun ? (
       <div className={`${styles.element} mt-4 mr-4`}>
         <ConstructorElement
@@ -87,16 +92,16 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
       />
     </div>
 
-    {orderRequest && (
-      <Modal onClose={closeOrderModal} title={'Оформляем заказ...'}>
+    {orderRequest && isLoading && (
+      <Modal onClose={closeOrderModal} title={'Оформляем заказ...' + '\u00A0'}>
         <Preloader />
       </Modal>
     )}
 
-    {orderModalData && (
+    {orderModalData && !isLoading && (
       <Modal
         onClose={closeOrderModal}
-        title={orderRequest ? 'Оформляем заказ...' : ''}
+        title={orderRequest ? 'Оформляем заказ...   ' : ''}
       >
         <OrderDetailsUI orderNumber={orderModalData.number} />
       </Modal>
