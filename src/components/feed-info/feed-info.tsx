@@ -15,7 +15,6 @@ const getOrders = (orders: TOrder[], status: string): number[] =>
 
 export const FeedInfo: FC = () => {
   const orders: TOrder[] = useSelector(getFeedsAll);
-  // const feed = {};
 
   const { number } = useParams();
 
