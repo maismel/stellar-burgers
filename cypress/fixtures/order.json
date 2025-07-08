@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "name": "Флюоресцентный space бургер",
+  "order": {
+    "_id": "order123",
+    "number": 123456,
+    "status": "done",
+    "createdAt": "2025-07-07T12:00:00.000Z",
+    "updatedAt": "2025-07-07T12:05:00.000Z",
+    "ingredients": [
+      "bun123",
+      "sauce456",
+      "main789",
+      "bun123"
+    ]
+  }
+}
