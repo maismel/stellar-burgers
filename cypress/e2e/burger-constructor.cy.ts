@@ -1,3 +1,9 @@
+const INGREDIENT_CARD = '[data-testid="ingredient-card"]';
+const CONSTRUCTOR_INGREDIENT = '[data-test-id="constructor-ingredient"]';
+const MODAL = '[data-testid="modal"]';
+const MODAL_CLOSE = '[data-testid="modal-close"]';
+const ORDER_NUMBER = '[data-testid="order-number"]';
+
 describe('проверяем доступность приложения', function () {
   it('сервис должен быть доступен по адресу localhost:5173', function () {
     cy.visit('/');
@@ -29,11 +35,11 @@ describe('Burger Constructor Integration', () => {
   });
 
   it('добавляет один ингредиент в конструктор', () => {
-    cy.contains('[data-testid="ingredient-card"]', 'Котлета')
+    cy.contains(INGREDIENT_CARD, 'Котлета')
       .find('button')
       .click();
 
-    cy.get('[data-test-id="constructor-ingredient"]').should(
+    cy.get(CONSTRUCTOR_INGREDIENT).should(
       'contain',
       'Котлета'
     );
@@ -51,15 +57,15 @@ describe('Модальное окно ингредиента', () => {
   });
 
   it('открывает и закрывает модалку по крестику', () => {
-    cy.contains('[data-testid="ingredient-card"]', 'Булка N1').click();
+    cy.contains(INGREDIENT_CARD, 'Булка N1').click();
 
-    cy.get('[data-testid="modal"]').should('be.visible');
+    cy.get(MODAL).should('be.visible');
     cy.contains('Детали ингредиента').should('exist');
     cy.contains('Булка N1').should('exist');
 
-    cy.get('[data-testid="modal-close"]').click();
+    cy.get(MODAL_CLOSE).click();
 
-    cy.get('[data-testid="modal"]').should('not.exist');
+    cy.get(MODAL).should('not.exist');
   });
 });
 
@@ -91,26 +97,26 @@ describe('Создание заказа', () => {
   });
 
   it('оформляет заказ и очищает конструктор', () => {
-    cy.contains('[data-testid="ingredient-card"]', 'Булка N1')
+    cy.contains(INGREDIENT_CARD, 'Булка N1')
       .find('button')
       .click();
     
-    cy.contains('[data-testid="ingredient-card"]', 'Котлета')
+    cy.contains(INGREDIENT_CARD, 'Котлета')
       .find('button')
       .click();
 
-    cy.get('[data-test-id="constructor-ingredient"]').should('have.length', 1);
+    cy.get(CONSTRUCTOR_INGREDIENT).should('have.length', 1);
 
     cy.contains('Оформить заказ').click();
     cy.wait('@makeOrder');
 
-    cy.get('[data-testid="order-number"]', { timeout: 6000 }).should('contain', '123456');
+    cy.get(ORDER_NUMBER, { timeout: 6000 }).should('contain', '123456');
 
-    cy.get('[data-testid="modal-close"]').click();
+    cy.get(MODAL_CLOSE).click();
 
-    cy.get('[data-testid="order-number"]').should('not.exist');
+    cy.get(ORDER_NUMBER).should('not.exist');
 
-    cy.get('[data-test-id="constructor-ingredient"]').should('not.exist');
+    cy.get(CONSTRUCTOR_INGREDIENT).should('not.exist');
   });
 });
 
