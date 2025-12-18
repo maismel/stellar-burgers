@@ -7,9 +7,6 @@ import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { FC } from 'react';
 import { getLoadingStatus } from '../../services/slices/ingredients/ingredientSlice';
-import { DndProvider } from 'react-dnd';
-
-// тут все готово
 
 export const ConstructorPage: FC = () => {
   const isIngredientsLoading = useSelector(getLoadingStatus);

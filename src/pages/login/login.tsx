@@ -5,8 +5,6 @@ import { useDispatch, useSelector, RootState } from '../../services/store';
 import { loginUser } from '../../services/slices/user/actions';
 import { getUser } from '../../services/slices/user/userSlice';
 
-// так, тут вероятней всего надо еще с паролем намутить
-
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

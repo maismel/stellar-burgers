@@ -8,7 +8,7 @@ import { getIngredients } from '../../services/slices/ingredients/ingredientSlic
 
 export const BurgerIngredients: FC = () => {
   const ingredients = useSelector(getIngredients);
-
+  console.log(ingredients);
   const buns: TIngredient[] = [];
   const mains: TIngredient[] = [];
   const sauces: TIngredient[] = [];
